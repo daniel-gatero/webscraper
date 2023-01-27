@@ -39,7 +39,7 @@ export class AppService {
           logo: '',
           data: [],
           category,
-          tiers: Math.floor(Math.random() * 10),
+          tiers: Math.floor(Math.random() * 3),
           teus: Math.floor(Math.random() * 10),
         };
 
