@@ -22,7 +22,7 @@ export class AppService {
     }
   }
 
-  async htmlToJson(html: string): Promise<Lead[]> {
+  async htmlToJson(html: string, category: string): Promise<Lead[]> {
     try {
       const leads: Lead[] = [];
 
@@ -38,6 +38,9 @@ export class AppService {
           name: '',
           logo: '',
           data: [],
+          category,
+          tiers: Math.floor(Math.random() * 10),
+          teus: Math.floor(Math.random() * 10),
         };
 
         const name = element.querySelector('.premium-titulo').textContent;
@@ -66,7 +69,7 @@ export class AppService {
       const { category } = query;
       const { path } = CATEGORIES.find((c) => c.slug === category);
       const rawHTML: string = await this.getRawHTML(path);
-      const leads = await this.htmlToJson(rawHTML);
+      const leads = await this.htmlToJson(rawHTML, category);
 
       return leads;
     } catch (error) {
