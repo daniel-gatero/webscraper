@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as jsdom from 'jsdom';
+import { CATEGORIES } from './app.constants';
 import { GetLeadsQuery } from './app.controller';
 export interface Lead {
   name: string;
@@ -9,12 +10,10 @@ export interface Lead {
 }
 @Injectable()
 export class AppService {
-  async getRawHTML(page = '1'): Promise<string> {
+  async getRawHTML(path = '22/aditivos'): Promise<string> {
     try {
-      const response = await axios.get(
-        `https://expoplastperu.com/guia/sector/${page}/productos-plasticos`,
-      );
-
+      const target = `https://expoplastperu.com/guia/rubro/${path}`;
+      const response = await axios.get(target);
       const rawHTML = response.data.trim();
 
       return rawHTML;
@@ -64,8 +63,9 @@ export class AppService {
 
   async getLeads(query: GetLeadsQuery): Promise<Lead[]> {
     try {
-      const { page } = query;
-      const rawHTML: string = await this.getRawHTML(page);
+      const { category } = query;
+      const { path } = CATEGORIES.find((c) => c.slug === category);
+      const rawHTML: string = await this.getRawHTML(path);
       const leads = await this.htmlToJson(rawHTML);
 
       return leads;
